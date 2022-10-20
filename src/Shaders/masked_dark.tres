@@ -1,0 +1,15 @@
+[gd_resource type="Shader" format=2]
+
+[resource]
+resource_local_to_scene = true
+code = "shader_type canvas_item;
+
+uniform vec4 flash_color : hint_color;
+uniform float flash_amount : hint_range(0.0, 1.0) = 1.0;
+uniform sampler2D mask_texture;
+
+void fragment(){
+	vec4 pixel_color = texture(TEXTURE,UV);
+	COLOR = mix(pixel_color, flash_color, texture(mask_texture,UV).r);
+	COLOR.a = pixel_color.a;
+}"

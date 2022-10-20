@@ -1,0 +1,72 @@
+[gd_scene load_steps=9 format=2]
+
+[ext_resource path="res://src/World/Stairs.gd" type="Script" id=1]
+[ext_resource path="res://src/Player/Player.tscn" type="PackedScene" id=2]
+[ext_resource path="res://src/Enemies/Slime.tscn" type="PackedScene" id=3]
+[ext_resource path="res://src/World/Camera2D.gd" type="Script" id=4]
+[ext_resource path="res://src/Sprites/Lights/light_area.png" type="Texture" id=5]
+[ext_resource path="res://icon.png" type="Texture" id=6]
+
+[sub_resource type="RectangleShape2D" id=1]
+extents = Vector2( 826.5, 25.5 )
+
+[sub_resource type="RectangleShape2D" id=2]
+extents = Vector2( 9, 175 )
+
+[node name="WorldTest" type="Node2D"]
+
+[node name="Player" parent="." instance=ExtResource( 2 )]
+
+[node name="Camera2D" type="Camera2D" parent="Player"]
+position = Vector2( 0, -30 )
+current = true
+zoom = Vector2( 0.5, 0.5 )
+process_mode = 0
+smoothing_enabled = true
+smoothing_speed = 20.0
+script = ExtResource( 4 )
+max_offset = -0.85
+min_offset = 1.5
+
+[node name="StaticBody2D" type="StaticBody2D" parent="."]
+position = Vector2( 443, 526 )
+collision_mask = 15
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="StaticBody2D"]
+position = Vector2( 262.5, -42 )
+shape = SubResource( 1 )
+
+[node name="Sprite" type="Sprite" parent="StaticBody2D"]
+position = Vector2( 257, -34 )
+scale = Vector2( 23.4, 1 )
+texture = ExtResource( 6 )
+
+[node name="Stairs" type="Area2D" parent="."]
+position = Vector2( 650, 338 )
+collision_layer = 16
+collision_mask = 31
+script = ExtResource( 1 )
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Stairs"]
+position = Vector2( 1, -46 )
+shape = SubResource( 2 )
+
+[node name="Sprite" type="Sprite" parent="Stairs"]
+modulate = Color( 1, 1, 1, 0.184314 )
+scale = Vector2( 0.294139, 6.9394 )
+texture = ExtResource( 6 )
+
+[node name="Slime" parent="." instance=ExtResource( 3 )]
+position = Vector2( 614, 452 )
+
+[node name="Light2D" type="Light2D" parent="."]
+position = Vector2( 277, 374 )
+texture = ExtResource( 5 )
+mode = 2
+
+[node name="CanvasModulate" type="CanvasModulate" parent="."]
+light_mask = 0
+color = Color( 0.211765, 0.0235294, 0.0235294, 1 )
+
+[connection signal="body_shape_entered" from="Stairs" to="Stairs" method="_on_Stairs_body_shape_entered"]
+[connection signal="body_shape_exited" from="Stairs" to="Stairs" method="_on_Stairs_body_shape_exited"]

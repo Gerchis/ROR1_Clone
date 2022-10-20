@@ -1,0 +1,15 @@
+[gd_resource type="Resource" load_steps=2 format=2]
+
+[ext_resource path="res://src/Resources/Stats.gd" type="Script" id=1]
+
+[resource]
+script = ExtResource( 1 )
+speed = 200.0
+accel = 3000.0
+jump_force = 400.0
+max_jumps = 1
+gravity = 1800.0
+fire_rate = 0.4
+stairs_speed = 100.0
+shoot_speed = 50.0
+shoot_damage = 35.0
