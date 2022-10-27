@@ -24,7 +24,7 @@ _global_script_classes=[ {
 "language": "GDScript",
 "path": "res://src/World/Stairs.gd"
 }, {
-"base": "Resource",
+"base": "Node",
 "class": "Stats",
 "language": "GDScript",
 "path": "res://src/Resources/Stats.gd"
@@ -46,6 +46,13 @@ config/icon="res://icon.png"
 
 GameManager="*res://src/Managers/GameManager.gd"
 SignalManager="*res://src/Managers/SignalManager.gd"
+
+[display]
+
+window/size/width=1920
+window/size/height=1080
+window/stretch/mode="viewport"
+window/stretch/aspect="keep"
 
 [global]
 

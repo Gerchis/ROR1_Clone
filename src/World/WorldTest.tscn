@@ -1,4 +1,4 @@
-[gd_scene load_steps=9 format=2]
+[gd_scene load_steps=11 format=2]
 
 [ext_resource path="res://src/World/Stairs.gd" type="Script" id=1]
 [ext_resource path="res://src/Player/Player.tscn" type="PackedScene" id=2]
@@ -6,16 +6,34 @@
 [ext_resource path="res://src/World/Camera2D.gd" type="Script" id=4]
 [ext_resource path="res://src/Sprites/Lights/light_area.png" type="Texture" id=5]
 [ext_resource path="res://icon.png" type="Texture" id=6]
-
-[sub_resource type="RectangleShape2D" id=1]
-extents = Vector2( 826.5, 25.5 )
+[ext_resource path="res://src/Sprites/Fog.png" type="Texture" id=7]
+[ext_resource path="res://src/PowerUps/SpeedUp.tscn" type="PackedScene" id=8]
 
 [sub_resource type="RectangleShape2D" id=2]
 extents = Vector2( 9, 175 )
 
+[sub_resource type="Environment" id=3]
+background_mode = 4
+background_color = Color( 0.0862745, 0.701961, 0, 1 )
+ambient_light_color = Color( 1, 1, 1, 1 )
+tonemap_mode = 3
+glow_enabled = true
+glow_bicubic_upscale = true
+glow_high_quality = true
+
 [node name="WorldTest" type="Node2D"]
 
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+layer = -20
+
+[node name="Fog" type="Sprite" parent="CanvasLayer"]
+modulate = Color( 0.396078, 0.25098, 0.25098, 1 )
+light_mask = 0
+texture = ExtResource( 7 )
+centered = false
+
 [node name="Player" parent="." instance=ExtResource( 2 )]
+position = Vector2( 374, 444 )
 
 [node name="Camera2D" type="Camera2D" parent="Player"]
 position = Vector2( 0, -30 )
@@ -23,7 +41,6 @@ current = true
 zoom = Vector2( 0.5, 0.5 )
 process_mode = 0
 smoothing_enabled = true
-smoothing_speed = 20.0
 script = ExtResource( 4 )
 max_offset = -0.85
 min_offset = 1.5
@@ -32,14 +49,19 @@ min_offset = 1.5
 position = Vector2( 443, 526 )
 collision_mask = 15
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="StaticBody2D"]
-position = Vector2( 262.5, -42 )
-shape = SubResource( 1 )
-
 [node name="Sprite" type="Sprite" parent="StaticBody2D"]
 position = Vector2( 257, -34 )
 scale = Vector2( 23.4, 1 )
 texture = ExtResource( 6 )
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="StaticBody2D"]
+build_mode = 1
+polygon = PoolVector2Array( -565, -72, 1089, -67, 1078, -29, 975, 15, 654, 39, 528, 10, 128, 111, 10, 31, -266, 32, -477, 73 )
+
+[node name="Polygon2D" type="Polygon2D" parent="StaticBody2D"]
+color = Color( 0.509804, 0.184314, 0.184314, 1 )
+antialiased = true
+polygon = PoolVector2Array( -565, -71, 1089, -67, 1078, -28, 976, 15, 655, 38, 529, 10, 392, 51, 128, 109, 11, 31, -265, 31, -477, 74 )
 
 [node name="Stairs" type="Area2D" parent="."]
 position = Vector2( 650, 338 )
@@ -62,11 +84,17 @@ position = Vector2( 614, 452 )
 [node name="Light2D" type="Light2D" parent="."]
 position = Vector2( 277, 374 )
 texture = ExtResource( 5 )
-mode = 2
+energy = 0.7
 
 [node name="CanvasModulate" type="CanvasModulate" parent="."]
 light_mask = 0
 color = Color( 0.211765, 0.0235294, 0.0235294, 1 )
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource( 3 )
+
+[node name="SpeedUp" parent="." instance=ExtResource( 8 )]
+position = Vector2( 181, 438 )
 
 [connection signal="body_shape_entered" from="Stairs" to="Stairs" method="_on_Stairs_body_shape_entered"]
 [connection signal="body_shape_exited" from="Stairs" to="Stairs" method="_on_Stairs_body_shape_exited"]

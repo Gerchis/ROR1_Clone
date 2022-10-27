@@ -13,7 +13,7 @@ func _process(delta):
 	scale.y = -1 if player.sprite.flip_h else 1
 
 func shoot(is_shooting:bool):
-	if is_shooting and fire_timer > player.stats.fire_rate:
+	if is_shooting and fire_timer > player.stats.get_fire_rate():
 		fire_timer = 0.0
 		var instance = bullet.instance()
 		

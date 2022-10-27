@@ -9,7 +9,7 @@ func _on_Bullet_body_shape_entered(body_rid, body, body_shape_index, local_shape
 	if body.is_in_group("Enemy"):
 		var enemy = body as Enemy
 		
-		enemy.health -= GameManager.player.stats.shoot_damage
+		enemy.health -= GameManager.player.stats.get_shoot_damage()
 		SignalManager.emit_signal("damage_to_enemy",body, 1.0)
 	
 	queue_free()

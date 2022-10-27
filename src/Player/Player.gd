@@ -1,7 +1,7 @@
 extends KinematicBody2D
 class_name PlayerController
 
-var stats : Resource
+var stats : Stats = null
 var jumps_made : int = 0
 var velocity := Vector2.ZERO
 var jumping := false
@@ -9,6 +9,7 @@ var bullet_scene := PackedScene
 var actual_stairs : Stairs = null
 var using_stairs := false
 
+onready var statsNode = $Stats
 onready var sprite = $Sprite2
 onready var weapon = $BaseWeapon
 onready var jump_buffer_timer = $JumpBuffer
@@ -16,7 +17,7 @@ onready var stairs_cancel_timer : Timer = $StairsCancel
 
 func _ready():
 	GameManager.set_player(self)
-	stats = GameManager.get_new_player_stats()
+	stats = statsNode as Stats
 
 func _process(delta):
 	if is_shooting():
@@ -48,11 +49,11 @@ func get_horizontal_input():
 	return result if abs(result) > 0.2 else 0
 
 func set_horizontal_movement(input:float, delta:float):
-	var target_speed = input*stats.shoot_speed if is_shooting() else input*stats.speed
-	velocity.x = move_toward(velocity.x, target_speed, stats.accel*delta)
+	var target_speed = input * stats.get_shooting_speed() if is_shooting() else input*stats.get_speed()
+	velocity.x = move_toward(velocity.x, target_speed, stats.get_accel()*delta)
 
 func apply_gravity(delta:float):
-	velocity.y += stats.gravity * delta
+	velocity.y += stats.get_gravity() * delta
 	velocity.y = clamp(velocity.y, -GameManager.MAX_GRAVITY_FORCE, GameManager.MAX_GRAVITY_FORCE)
 
 func jump():
@@ -63,8 +64,8 @@ func jump():
 		jump_buffer_timer.start()
 		jumping = true
 	
-	if jumping and jumps_made < stats.max_jumps:
-		velocity.y = -stats.jump_force
+	if jumping and jumps_made < stats.get_max_jumps():
+		velocity.y = -stats.get_jump_force()
 		jumps_made += 1
 		jump_buffer_timer.stop()
 		jumping = false
@@ -136,7 +137,7 @@ func use_stairs():
 	if Input.is_action_just_pressed("jump") and using_stairs and stairs_cancel_timer.is_stopped():
 		detach_from_stairs()
 		
-		velocity.y = -stats.jump_force
+		velocity.y = -stats.get_jump_force()
 		jumps_made += 1
 	
 	if get_vertical_input() != 0 and stairs_cancel_timer.is_stopped():
@@ -145,4 +146,4 @@ func use_stairs():
 	
 	if using_stairs and stairs_cancel_timer.is_stopped():
 		velocity.x = 0
-		velocity.y = get_vertical_input()*stats.stairs_speed
+		velocity.y = get_vertical_input()*stats.get_stairs_speed()
